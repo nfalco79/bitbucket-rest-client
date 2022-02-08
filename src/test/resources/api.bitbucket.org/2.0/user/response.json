@@ -1,0 +1,33 @@
+{
+    "username":"nfalco79",
+    "has_2fa_enabled":null,
+    "display_name":"Nikolas Falco",
+    "account_id":"557058:ca1cd232-2017-4216-94be-99637899e18d",
+    "links":{
+        "hooks":{
+            "href":"https://api.bitbucket.org/2.0/workspaces/%7B644c7fc2-b15a-4445-9f89-35390694fac9%7D/hooks"
+        },
+        "self":{
+            "href":"https://api.bitbucket.org/2.0/users/%7B644c7fc2-b15a-4445-9f89-35390694fac9%7D"
+        },
+        "repositories":{
+            "href":"https://api.bitbucket.org/2.0/repositories/%7B644c7fc2-b15a-4445-9f89-35390694fac9%7D"
+        },
+        "html":{
+            "href":"https://bitbucket.org/%7B644c7fc2-b15a-4445-9f89-35390694fac9%7D/"
+        },
+        "avatar":{
+            "href":"https://secure.gravatar.com/avatar/4a96141bfb62b3723c9959023a7e9aff?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FNF-0.png"
+        },
+        "snippets":{
+            "href":"https://api.bitbucket.org/2.0/snippets/%7B644c7fc2-b15a-4445-9f89-35390694fac9%7D"
+        }
+    },
+    "nickname":"Nikolas Falco",
+    "created_on":"2016-04-26T09:17:51.433481+00:00",
+    "is_staff":false,
+    "location":null,
+    "account_status":"active",
+    "type":"user",
+    "uuid":"{644c7fc2-b15a-4445-9f89-35390694fac9}"
+}
