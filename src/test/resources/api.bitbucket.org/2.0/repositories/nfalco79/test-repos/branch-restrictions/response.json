@@ -1,0 +1,138 @@
+{
+    "pagelen":100,
+    "values":[
+        {
+            "kind":"force",
+            "users":[
+                
+            ],
+            "links":{
+                "self":{
+                    "href":"https://api.bitbucket.org/2.0/repositories/nfalco79/test-repos/branch-restrictions/5649450"
+                }
+            },
+            "pattern":"master",
+            "value":null,
+            "branch_match_kind":"glob",
+            "groups":[
+                
+            ],
+            "type":"branchrestriction",
+            "id":5649450
+        },
+        {
+            "kind":"delete",
+            "users":[
+                
+            ],
+            "links":{
+                "self":{
+                    "href":"https://api.bitbucket.org/2.0/repositories/nfalco79/test-repos/branch-restrictions/5649449"
+                }
+            },
+            "pattern":"master",
+            "value":null,
+            "branch_match_kind":"glob",
+            "groups":[
+                
+            ],
+            "type":"branchrestriction",
+            "id":5649449
+        },
+        {
+            "kind":"require_passing_builds_to_merge",
+            "users":[
+                
+            ],
+            "links":{
+                "self":{
+                    "href":"https://api.bitbucket.org/2.0/repositories/nfalco79/test-repos/branch-restrictions/26155268"
+                }
+            },
+            "pattern":"master",
+            "value":1,
+            "branch_match_kind":"glob",
+            "groups":[
+                
+            ],
+            "type":"branchrestriction",
+            "id":26155268
+        },
+        {
+            "kind":"require_approvals_to_merge",
+            "users":[
+                
+            ],
+            "links":{
+                "self":{
+                    "href":"https://api.bitbucket.org/2.0/repositories/nfalco79/test-repos/branch-restrictions/26155267"
+                }
+            },
+            "pattern":"master",
+            "value":2,
+            "branch_match_kind":"glob",
+            "groups":[
+                
+            ],
+            "type":"branchrestriction",
+            "id":26155267
+        },
+        {
+            "kind":"restrict_merges",
+            "users":[
+                {
+                    "display_name":"Nikolas Falco",
+                    "uuid":"{644c7fc2-b15a-4445-9f89-35390694fac9}",
+                    "links":{
+                        "self":{
+                            "href":"https://api.bitbucket.org/2.0/users/%7B644c7fc2-b15a-4445-9f89-35390694fac9%7D"
+                        },
+                        "html":{
+                            "href":"https://bitbucket.org/%7B644c7fc2-b15a-4445-9f89-35390694fac9%7D/"
+                        },
+                        "avatar":{
+                            "href":"https://secure.gravatar.com/avatar/4a96141bfb62b3723c9959023a7e9aff?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FNF-0.png"
+                        }
+                    },
+                    "type":"user",
+                    "nickname":"Nikolas Falco",
+                    "account_id":"557058:ca1cd232-2017-4216-94be-99637899e18d"
+                }
+            ],
+            "links":{
+                "self":{
+                    "href":"https://api.bitbucket.org/2.0/repositories/nfalco79/test-repos/branch-restrictions/26155266"
+                }
+            },
+            "pattern":"master",
+            "value":null,
+            "branch_match_kind":"glob",
+            "groups":[
+                
+            ],
+            "type":"branchrestriction",
+            "id":26155266
+        },
+        {
+            "kind":"push",
+            "users":[
+                
+            ],
+            "links":{
+                "self":{
+                    "href":"https://api.bitbucket.org/2.0/repositories/nfalco79/test-repos/branch-restrictions/26155265"
+                }
+            },
+            "pattern":"master",
+            "value":null,
+            "branch_match_kind":"glob",
+            "groups":[
+                
+            ],
+            "type":"branchrestriction",
+            "id":26155265
+        }
+    ],
+    "page":1,
+    "size":6
+}

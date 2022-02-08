@@ -1,0 +1,45 @@
+{
+    "pagelen":10,
+    "values":[
+        {
+            "type":"repository_permission",
+            "user":{
+                "display_name":"Nikolas Falco",
+                "uuid":"{644c7fc2-b15a-4445-9f89-35390694fac9}",
+                "links":{
+                    "self":{
+                        "href":"https://api.bitbucket.org/2.0/users/%7B644c7fc2-b15a-4445-9f89-35390694fac9%7D"
+                    },
+                    "html":{
+                        "href":"https://bitbucket.org/%7B644c7fc2-b15a-4445-9f89-35390694fac9%7D/"
+                    },
+                    "avatar":{
+                        "href":"https://secure.gravatar.com/avatar/4a96141bfb62b3723c9959023a7e9aff?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FNF-0.png"
+                    }
+                },
+                "type":"user",
+                "nickname":"Nikolas Falco",
+                "account_id":"557058:ca1cd232-2017-4216-94be-99637899e18d"
+            },
+            "repository":{
+                "links":{
+                    "self":{
+                        "href":"https://api.bitbucket.org/2.0/repositories/nfalco79/test-repos"
+                    },
+                    "html":{
+                        "href":"https://bitbucket.org/nfalco79/test-repos"
+                    },
+                    "avatar":{
+                        "href":"https://bytebucket.org/ravatar/%7B3deb8c29-778a-450c-8f69-3e50a18079df%7D?ts=default"
+                    }
+                },
+                "type":"repository",
+                "name":"test-repos",
+                "full_name":"nfalco79/test-repos",
+                "uuid":"{3deb8c29-778a-450c-8f69-3e50a18079df}"
+            },
+            "permission":"admin"
+        }
+    ],
+    "page":1
+}
