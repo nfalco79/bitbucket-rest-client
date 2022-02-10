@@ -21,7 +21,6 @@ import java.util.List;
 public class Links {
     public static class Href {
         private String href;
-        private String name;
 
         public String getHref() {
             return href;
@@ -29,14 +28,6 @@ public class Links {
 
         public void setHref(String href) {
             this.href = href;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
         }
     }
 
@@ -55,6 +46,12 @@ public class Links {
     private Href forks;
     private Href downloads;
     private Href pullrequests;
+    private Href merge;
+    private Href decline;
+    private Href diff;
+    private Href statuses;
+    private Href approve;
+    private Href activity;
 
     public Href getHooks() {
         return hooks;
@@ -174,6 +171,54 @@ public class Links {
 
     public void setPullrequests(Href pullrequests) {
         this.pullrequests = pullrequests;
+    }
+
+    public Href getMerge() {
+        return merge;
+    }
+
+    public void setMerge(Href merge) {
+        this.merge = merge;
+    }
+
+    public Href getDecline() {
+        return decline;
+    }
+
+    public void setDecline(Href decline) {
+        this.decline = decline;
+    }
+
+    public Href getDiff() {
+        return diff;
+    }
+
+    public void setDiff(Href diff) {
+        this.diff = diff;
+    }
+
+    public Href getApprove() {
+        return approve;
+    }
+
+    public void setApprove(Href approve) {
+        this.approve = approve;
+    }
+
+    public Href getStatuses() {
+        return statuses;
+    }
+
+    public void setStatuses(Href statuses) {
+        this.statuses = statuses;
+    }
+
+    public Href getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Href activity) {
+        this.activity = activity;
     }
 
 }

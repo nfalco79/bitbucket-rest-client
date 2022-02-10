@@ -1,0 +1,46 @@
+{
+    "values":[
+        {
+            "approval":{
+                "date":"2022-02-09T12:24:39.475894+00:00",
+                "pullrequest":{
+                    "type":"pullrequest",
+                    "id":1,
+                    "links":{
+                        "self":{
+                            "href":"https://api.bitbucket.org/2.0/repositories/nfalco79/test-repos/pullrequests/1"
+                        },
+                        "html":{
+                            "href":"https://bitbucket.org/nfalco79/test-repos/pull-requests/1"
+                        }
+                    },
+                    "title":"Release/release 1"
+                },
+                "user":{
+                    "display_name":"Nikolas Falco",
+                    "uuid":"{644c7fc2-b15a-4445-9f89-35390694fac9}",
+                    "links":{
+                        "self":{
+                            "href":"https://api.bitbucket.org/2.0/users/%7B644c7fc2-b15a-4445-9f89-35390694fac9%7D"
+                        },
+                        "html":{
+                            "href":"https://bitbucket.org/%7B644c7fc2-b15a-4445-9f89-35390694fac9%7D/"
+                        },
+                        "avatar":{
+                            "href":"https://secure.gravatar.com/avatar/4a96141bfb62b3723c9959023a7e9aff?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FNF-0.png"
+                        }
+                    },
+                    "type":"user",
+                    "nickname":"Nikolas Falco",
+                    "account_id":"557058:ca1cd232-2017-4216-94be-99637899e18d"
+                }
+            }
+        },
+        {
+            
+        },
+        {
+            
+        }
+    ]
+}

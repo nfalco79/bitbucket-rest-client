@@ -15,6 +15,19 @@
  */
 package com.github.nfalco79.bitbucket.client;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpRequest;
+
+/**
+ * This object represent the credentials to use in {@link BitbucketCloudClient}.
+ * <p>
+ * The implementations also setup a request with proper authentication.
+ * 
+ * @author Nikolas Falco
+ */
 public abstract class Credentials {
 
     public static class CredentialsBuilder {
@@ -27,16 +40,41 @@ public abstract class Credentials {
         }
     }
 
-    public static class AppPassword extends Credentials {
+    /* package */ static class AppPassword extends Credentials {
         private AppPassword(String user, String password) {
             super(user, password);
         }
+
+        @Override
+        public void apply(HttpRequest request) {
+            request.setHeader(HttpHeaders.AUTHORIZATION, getBasicAuth(this));
+        }
     }
 
-    public static class OAuth2Consumer extends Credentials {
+    /* package */ static class OAuth2Consumer extends Credentials {
+        private String accessToken;
+
         private OAuth2Consumer(String user, String password) {
             super(user, password);
         }
+
+        @Override
+        public void apply(HttpRequest request) {
+            if ("/site/oauth2/access_token".equals(request.getRequestUri())) {
+                request.setHeader(HttpHeaders.AUTHORIZATION, getBasicAuth(this));
+            } else {
+                request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+            }
+        }
+
+        public void setToken(String accessToken) {
+            this.accessToken = accessToken;
+        }
+    }
+
+    private static String getBasicAuth(Credentials credentials) {
+        return "Basic " + Base64.getEncoder().encodeToString((credentials.getUser() + ":"
+                + credentials.getPassword()).getBytes(StandardCharsets.UTF_8));
     }
 
     private String user;
@@ -54,4 +92,6 @@ public abstract class Credentials {
     public String getPassword() {
         return password;
     }
+
+    public abstract void apply(HttpRequest request);
 }

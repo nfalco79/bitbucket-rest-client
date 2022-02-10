@@ -17,12 +17,10 @@ package com.github.nfalco79.bitbucket.client.model;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  * Include the basic details relative to the group to identify it.
  */
-@XmlRootElement
+
 public class GroupInfo extends BitbucketObject {
 
     private String slug;

@@ -13,13 +13,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.github.nfalco79.bitbucket.client.rest;
+package com.github.nfalco79.bitbucket.client.internal.rest;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import com.github.nfalco79.bitbucket.client.model.Activity;
 
-import com.github.nfalco79.bitbucket.client.model.Repository;
-
-@XmlRootElement
-public class RepositoryResponse extends PaginatedResponse<Repository> {
-
+public class PullRequestActivityResponse extends PaginatedResponse<Activity> {
 }

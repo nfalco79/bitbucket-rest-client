@@ -13,25 +13,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.github.nfalco79.bitbucket.client.rest;
+package com.github.nfalco79.bitbucket.client.internal.rest;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public abstract class PaginatedResponse<T> {
 
-    private URI next;
+    private String next;
+    @JsonInclude(Include.NON_EMPTY)
     private List<T> values = new ArrayList<>();
 
     public PaginatedResponse() {
     }
 
-    public URI getNext() {
+    public String getNext() {
         return next;
     }
 
-    public void setNext(URI next) {
+    public void setNext(String next) {
         this.next = next;
     }
 

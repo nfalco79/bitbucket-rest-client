@@ -17,20 +17,44 @@ package com.github.nfalco79.bitbucket.client;
 
 import java.io.IOException;
 
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+
 /**
- * Exception raised by BBClient.
+ * Exception raised by {@link BitbucketCloudClient}.
+ * 
+ * @author Nikolas Falco
  */
 @SuppressWarnings("serial")
 public class ClientException extends IOException {
 
+    private int status;
+    private String response;
+
     /**
      * Create an exception with the given message.
      *
-     * @param message
-     *            the exception message
+     * @param response
+     *            the client response error
      */
-    public ClientException(String message) {
-        super(message);
+    public ClientException(CloseableHttpResponse response) {
+        super("HTTP " + response.getCode());
+        this.status = response.getCode();
+        try {
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                this.response = EntityUtils.toString(entity);
+            }
+        } catch (ParseException | IOException e) {
+        }
+    }
+
+    @Override
+    public String getMessage() {
+        String message = super.getMessage();
+        return (response != null) ? message + ": " + response : message;
     }
 
     /**
@@ -45,6 +69,10 @@ public class ClientException extends IOException {
      */
     protected ClientException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public int getStatus() {
+        return status;
     }
 
 }

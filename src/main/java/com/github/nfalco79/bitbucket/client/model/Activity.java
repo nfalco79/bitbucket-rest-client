@@ -17,13 +17,34 @@ package com.github.nfalco79.bitbucket.client.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum Permission {
-    @JsonProperty("none")
-    NONE, //
-    @JsonProperty("read")
-    READ, //
-    @JsonProperty("write")
-    WRITE, //
-    @JsonProperty("admin")
-    ADMIN;
+public class Activity {
+
+    private PullRequest update;
+    private Approval approval;
+    private PullRequest pullRequest;
+
+    @JsonProperty("pull_request")
+    public PullRequest getPullRequest() {
+        return pullRequest;
+    }
+
+    public void setPullRequest(PullRequest pullRequest) {
+        this.pullRequest = pullRequest;
+    }
+
+    public PullRequest getUpdate() {
+        return update;
+    }
+
+    public void setUpdate(PullRequest update) {
+        this.update = update;
+    }
+
+    public Approval getApproval() {
+        return approval;
+    }
+
+    public void setApproval(Approval approval) {
+        this.approval = approval;
+    }
 }

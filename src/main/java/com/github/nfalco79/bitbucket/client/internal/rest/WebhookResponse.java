@@ -13,17 +13,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.github.nfalco79.bitbucket.client.model;
+package com.github.nfalco79.bitbucket.client.internal.rest;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.nfalco79.bitbucket.client.model.Webhook;
 
-public enum Permission {
-    @JsonProperty("none")
-    NONE, //
-    @JsonProperty("read")
-    READ, //
-    @JsonProperty("write")
-    WRITE, //
-    @JsonProperty("admin")
-    ADMIN;
+public class WebhookResponse extends PaginatedResponse<Webhook> {
 }

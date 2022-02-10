@@ -13,29 +13,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.github.nfalco79.bitbucket.client.rest;
+package com.github.nfalco79.bitbucket.client.internal.rest;
 
-import com.github.nfalco79.bitbucket.client.model.GroupInfo;
-import com.github.nfalco79.bitbucket.client.model.Permission;
+import com.github.nfalco79.bitbucket.client.model.PullRequest;
 
-public class GroupPermissionResponse {
-
-    private Permission privilege;
-    private GroupInfo group;
-
-    public Permission getPrivilege() {
-        return privilege;
-    }
-
-    public void setPrivilege(Permission privilege) {
-        this.privilege = privilege;
-    }
-
-    public GroupInfo getGroup() {
-        return group;
-    }
-
-    public void setGroup(GroupInfo group) {
-        this.group = group;
-    }
+public class PullRequestResponse extends PaginatedResponse<PullRequest> {
 }

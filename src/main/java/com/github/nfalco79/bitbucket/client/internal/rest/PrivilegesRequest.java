@@ -13,24 +13,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.github.nfalco79.bitbucket.client.rest;
+package com.github.nfalco79.bitbucket.client.internal.rest;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.nfalco79.bitbucket.client.model.Permission;
 
-@XmlRootElement
 public class PrivilegesRequest {
 
     public static class Principal {
         private String accountId;
         private String slug;
 
-        @XmlElement(name = "account_id")
+        @JsonProperty("account_id")
         public String getAccountId() {
             return accountId;
         }

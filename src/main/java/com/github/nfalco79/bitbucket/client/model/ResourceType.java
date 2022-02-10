@@ -15,13 +15,13 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
-import javax.xml.bind.annotation.XmlEnumValue;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum ResourceType {
-    @XmlEnumValue("team")
+    @JsonProperty("team")
     TEAM, //
-    @XmlEnumValue("user")
+    @JsonProperty("user")
     USER, //
-    @XmlEnumValue("repository")
+    @JsonProperty("repository")
     REPOSITORY, //
 }

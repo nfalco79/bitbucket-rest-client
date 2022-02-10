@@ -15,7 +15,7 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
-import javax.xml.bind.annotation.XmlElement;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AuthToken {
 
@@ -23,7 +23,7 @@ public class AuthToken {
     private String refreshToken;
     private int expiry;
 
-    @XmlElement(name = "access_token")
+    @JsonProperty("access_token")
     public String getAccessToken() {
         return accessToken;
     }
@@ -32,7 +32,7 @@ public class AuthToken {
         this.accessToken = accessToken;
     }
 
-    @XmlElement(name = "refresh_token")
+    @JsonProperty("refresh_token")
     public String getRefreshToken() {
         return refreshToken;
     }
@@ -41,7 +41,7 @@ public class AuthToken {
         this.refreshToken = refreshToken;
     }
 
-    @XmlElement(name = "expires_in")
+    @JsonProperty("expires_in")
     public int getExpiry() {
         return expiry;
     }

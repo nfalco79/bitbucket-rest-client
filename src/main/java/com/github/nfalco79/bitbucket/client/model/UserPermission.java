@@ -15,19 +15,19 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
-import javax.xml.bind.annotation.XmlElement;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserPermission {
-    private Permission privilege;
+    private Permission permission = Permission.NONE;
     private UserInfo user;
 
-    @XmlElement(name = "permission")
-    public Permission getPrivilege() {
-        return privilege;
+    @JsonProperty("permission")
+    public Permission getPermission() {
+        return permission;
     }
 
-    public void setPrivilege(Permission privilege) {
-        this.privilege = privilege;
+    public void setPermission(Permission permission) {
+        this.permission = permission;
     }
 
     public UserInfo getUser() {

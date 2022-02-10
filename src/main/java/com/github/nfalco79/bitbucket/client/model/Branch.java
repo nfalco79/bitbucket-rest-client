@@ -13,12 +13,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.github.nfalco79.bitbucket.client.rest;
+package com.github.nfalco79.bitbucket.client.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
+public class Branch {
+    private String name;
 
-import com.github.nfalco79.bitbucket.client.model.BranchRestriction;
+    public String getName() {
+        return name;
+    }
 
-@XmlRootElement
-public class BranchPermissionResponse extends PaginatedResponse<BranchRestriction> {
+    public void setName(String name) {
+        this.name = name;
+    }
 }

@@ -13,12 +13,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.github.nfalco79.bitbucket.client.rest;
+package com.github.nfalco79.bitbucket.client.internal.rest;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import com.github.nfalco79.bitbucket.client.model.BranchRestriction;
 
-import com.github.nfalco79.bitbucket.client.model.Webhook;
-
-@XmlRootElement
-public class WebhookResponse extends PaginatedResponse<Webhook> {
+public class BranchPermissionResponse extends PaginatedResponse<BranchRestriction> {
 }

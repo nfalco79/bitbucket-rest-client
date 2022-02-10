@@ -15,15 +15,37 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum Permission {
-    @JsonProperty("none")
-    NONE, //
-    @JsonProperty("read")
-    READ, //
-    @JsonProperty("write")
-    WRITE, //
-    @JsonProperty("admin")
-    ADMIN;
+public class Approval {
+    private Date date;
+    private PullRequest pullRequest;
+    private UserInfo user;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    @JsonProperty("pullrequest")
+    public PullRequest getPullRequest() {
+        return pullRequest;
+    }
+
+    public void setPullRequest(PullRequest pullRequest) {
+        this.pullRequest = pullRequest;
+    }
+
+    public UserInfo getUser() {
+        return user;
+    }
+
+    public void setUser(UserInfo user) {
+        this.user = user;
+    }
 }

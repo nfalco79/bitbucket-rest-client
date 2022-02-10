@@ -19,10 +19,9 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@XmlRootElement
+
 public class BranchRestriction {
 
     public static class Builder {
@@ -138,7 +137,7 @@ public class BranchRestriction {
         this.pattern = pattern;
     }
 
-    @XmlElement(name = "branch_match_kind")
+    @JsonProperty("branch_match_kind")
     public String getBranchKind() {
         return branchKind;
     }

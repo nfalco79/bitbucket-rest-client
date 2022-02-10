@@ -15,46 +15,17 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-public class BitbucketObject {
-    private String key;
-    private String name;
-    private String uuid;
-    private Links links;
+public class Commit {
+    private String hash;
     private String type;
+    private Links links;
 
-    public String getKey() {
-        return key;
+    public String getHash() {
+        return hash;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @JsonProperty("uuid")
-    public String getUUID() {
-        return uuid;
-    }
-
-    public void setUUID(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public Links getLinks() {
-        return links;
-    }
-
-    public void setLinks(Links links) {
-        this.links = links;
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public String getType() {
@@ -63,5 +34,13 @@ public class BitbucketObject {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Links getLinks() {
+        return links;
+    }
+
+    public void setLinks(Links links) {
+        this.links = links;
     }
 }

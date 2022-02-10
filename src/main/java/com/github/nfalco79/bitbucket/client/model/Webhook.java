@@ -19,10 +19,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@XmlRootElement
+
 public class Webhook {
     public static final String REPO_PUSH = "repo:push";
     public static final String PULLREQUEST_CREATED = "pullrequest:created";
@@ -36,7 +35,7 @@ public class Webhook {
     private boolean active = true;
     private List<String> events = new LinkedList<String>();
 
-    @XmlElement(name = "uuid")
+    @JsonProperty("uuid")
     public String getUUID() {
         return uuid;
     }

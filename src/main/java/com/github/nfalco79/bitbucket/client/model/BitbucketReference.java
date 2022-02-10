@@ -15,15 +15,33 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+public class BitbucketReference {
+    private Repository repository;
+    private Branch branch;
+    private Commit commit;
 
-public enum Permission {
-    @JsonProperty("none")
-    NONE, //
-    @JsonProperty("read")
-    READ, //
-    @JsonProperty("write")
-    WRITE, //
-    @JsonProperty("admin")
-    ADMIN;
+    public Repository getRepository() {
+        return repository;
+    }
+
+    public void setRepository(Repository repository) {
+        this.repository = repository;
+    }
+
+    public Branch getBranch() {
+        return branch;
+    }
+
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+    }
+
+    public Commit getCommit() {
+        return commit;
+    }
+
+    public void setCommit(Commit commit) {
+        this.commit = commit;
+    }
+
 }

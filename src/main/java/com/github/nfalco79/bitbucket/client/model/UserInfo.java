@@ -17,13 +17,11 @@ package com.github.nfalco79.bitbucket.client.model;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Include the details relative to a user to identify it.
  */
-@XmlRootElement
 public class UserInfo extends BitbucketObject {
 
     private String displayName;
@@ -31,7 +29,7 @@ public class UserInfo extends BitbucketObject {
     private String accountId;
 
     @Override
-    @XmlElement(name = "username")
+    @JsonProperty("username")
     public String getName() {
         return super.getName();
     }
@@ -44,7 +42,7 @@ public class UserInfo extends BitbucketObject {
         this.nickname = nickname;
     }
 
-    @XmlElement(name = "account_id")
+    @JsonProperty("account_id")
     public String getAccountId() {
         return accountId;
     }
@@ -53,7 +51,7 @@ public class UserInfo extends BitbucketObject {
         this.accountId = accountId;
     }
 
-    @XmlElement(name = "display_name")
+    @JsonProperty("display_name")
     public String getDisplayName() {
         return displayName;
     }
