@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.nfalco79</groupId>
     <artifactId>bitbucket-rest-client</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>Bitbucket Client</name>
     <description>A Bitbucket Cloud REST APIs client</description>
     <url>https://github.com/nfalco79/bitbucket-rest-client</url>
@@ -23,7 +23,7 @@
         <url>https://github.com/nfalco79/bitbucket-rest-client</url>
         <connection>scm:git:git@github.com:nfalco79/bitbucket-rest-client.git</connection>
         <developerConnection>scm:git:git@github.com:nfalco79/bitbucket-rest-client.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>bitbucket-rest-client-1.0.1</tag>
     </scm>
     <properties>
         <sonar.organization>nfalco79</sonar.organization>
