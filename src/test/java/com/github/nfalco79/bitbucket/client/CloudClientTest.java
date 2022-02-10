@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.LogManager;
 
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.junit.Before;
@@ -50,7 +49,7 @@ public class CloudClientTest {
 
     @Before
     public void setupClient() throws Exception {
-        LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/logging.properties"));
+        // LogManager.getLogManager().readConfiguration(getClass().getResourceAsStream("/logging.properties"));
 
         uriCalls = new LinkedList<>();
         client = new BitbucketCloudClient(Mockito.mock(Credentials.class)) {

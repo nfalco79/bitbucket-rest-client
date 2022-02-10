@@ -15,14 +15,12 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
-import javax.xml.bind.annotation.XmlEnumValue;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Repository extends BitbucketObject {
     public enum ForkPolicy {
         ALLOW, //
-        @XmlEnumValue("no_forks")
+        @JsonProperty("no_forks")
         NOT_ALLOW
     }
 
