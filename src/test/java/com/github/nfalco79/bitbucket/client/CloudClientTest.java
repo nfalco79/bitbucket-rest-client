@@ -25,16 +25,22 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.ProtocolException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.github.nfalco79.bitbucket.client.Credentials.CredentialsBuilder;
 import com.github.nfalco79.bitbucket.client.model.Approval;
+import com.github.nfalco79.bitbucket.client.model.AuthToken;
 import com.github.nfalco79.bitbucket.client.model.BranchRestriction;
 import com.github.nfalco79.bitbucket.client.model.BranchRestriction.Builder;
+import com.github.nfalco79.bitbucket.client.model.GroupInfo;
 import com.github.nfalco79.bitbucket.client.model.Permission;
 import com.github.nfalco79.bitbucket.client.model.PullRequest;
 import com.github.nfalco79.bitbucket.client.model.Repository;
@@ -107,21 +113,10 @@ public class CloudClientTest {
 
     @Test
     public void test_group_permission() throws Exception {
-        Map<String, Permission> rights = client.getGroupsPermission("finantix", "tds.plt.platform-java");
-        assertThat(rights).containsEntry("administrators", Permission.ADMIN) //
-                .containsEntry("prd_plt_ftx_ld", Permission.WRITE);
-    }
-
-    @Test
-    public void find_user() throws Exception {
-        List<UserInfo> users = client.findUser("finantix", "tds.plt.platform-java", "radbui");
-        assertThat(users).anySatisfy(user -> assertThat(user.getNickname()).isEqualTo("radbuilder"));
-    }
-
-    @Test
-    public void find_missing_groups() throws Exception {
-        List<String> groups = client.findAvailableGroups("finantix", "tds.plt.platform-java");
-        assertThat(groups).isNotEmpty();
+        Map<GroupInfo, Permission> rights = client.getGroupsPermissions("nfalco79", "test-repos");
+        assertThat(rights) //
+            .containsEntry(new GroupInfo("Administrators"), Permission.ADMIN) //
+            .containsEntry(new GroupInfo("DevOps"), Permission.ADMIN);
     }
 
     @Test
@@ -150,5 +145,50 @@ public class CloudClientTest {
         client.setPullRequestApproval("nfalco79", "test-repos", 1, approved);
 
         assertThat(uriCalls).contains(new URI("https://api.bitbucket.org/2.0/repositories/nfalco79/test-repos/pullrequests/1/approve"));
+    }
+
+    @Test
+    public void test_default_content_type_is_application_json() throws Exception {
+        AtomicBoolean verifyApplied = new AtomicBoolean(false);
+        try (BitbucketCloudClient client = new BitbucketCloudClient(Mockito.mock(Credentials.class)) {
+            @Override
+            protected <T> T process(HttpUriRequest request, Object type) throws ClientException {
+                setupRequest(request);
+                try {
+                    assertThat(request.getHeader(HttpHeaders.CONTENT_TYPE)).isNotNull().satisfies(header -> {
+                        assertThat(header.getValue()).isEqualTo("application/json;charset=utf-8");
+                    });
+                    verifyApplied.set(true);
+                } catch (ProtocolException e) {
+                    throw new ClientException("unexpected failure", e);
+                }
+                return null;
+            }
+        }) {
+            client.getUser();
+        }
+    }
+
+    @Test
+    public void test_content_type_when_OAth2() throws Exception {
+        AtomicBoolean verifyApplied = new AtomicBoolean(false);
+        try(BitbucketCloudClient client = new BitbucketCloudClient(CredentialsBuilder.oauth2("clientId", "clientSecret")) {
+            @SuppressWarnings("unchecked")
+            @Override
+            protected <T> T process(HttpUriRequest request, Object type) throws ClientException {
+                setupRequest(request);
+                try {
+                    assertThat(request.getHeader(HttpHeaders.CONTENT_TYPE)).isNotNull().satisfies(header -> {
+                        assertThat(header.getValue()).isEqualTo("application/x-www-form-urlencoded");
+                    });
+                    verifyApplied.set(true);
+                } catch (ProtocolException e) {
+                    throw new ClientException("unexpected failure", e);
+                }
+                return (T) new AuthToken();
+            }
+        }) {
+        }
+        assertThat(verifyApplied).isTrue().describedAs("No verification has been applied to context-type header");
     }
 }

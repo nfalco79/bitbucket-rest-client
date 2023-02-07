@@ -17,14 +17,14 @@ package com.github.nfalco79.bitbucket.client;
 
 import java.io.IOException;
 
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 
 /**
  * Exception raised by {@link BitbucketCloudClient}.
- * 
+ *
  * @author Nikolas Falco
  */
 @SuppressWarnings("serial")
@@ -39,7 +39,7 @@ public class ClientException extends IOException {
      * @param response
      *            the client response error
      */
-    public ClientException(CloseableHttpResponse response) {
+    public ClientException(ClassicHttpResponse response) {
         super("HTTP " + response.getCode());
         this.status = response.getCode();
         try {

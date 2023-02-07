@@ -17,6 +17,7 @@ package com.github.nfalco79.bitbucket.client.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -43,6 +44,7 @@ public class UserInfo extends BitbucketObject {
     }
 
     @JsonProperty("account_id")
+    @JsonAlias("mention_id")
     public String getAccountId() {
         return accountId;
     }

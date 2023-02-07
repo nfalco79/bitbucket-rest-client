@@ -15,6 +15,7 @@
  */
 package com.github.nfalco79.bitbucket.client;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -36,17 +37,18 @@ import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.DefaultHttpRequestRetryStrategy;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.util.TimeValue;
 
 import com.damnhandy.uri.template.UriTemplate;
 import com.damnhandy.uri.template.UriTemplateBuilder;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -65,6 +67,7 @@ import com.github.nfalco79.bitbucket.client.model.Approval;
 import com.github.nfalco79.bitbucket.client.model.AuthToken;
 import com.github.nfalco79.bitbucket.client.model.BranchRestriction;
 import com.github.nfalco79.bitbucket.client.model.GroupInfo;
+import com.github.nfalco79.bitbucket.client.model.GroupPermission;
 import com.github.nfalco79.bitbucket.client.model.Permission;
 import com.github.nfalco79.bitbucket.client.model.PullRequest;
 import com.github.nfalco79.bitbucket.client.model.Repository;
@@ -74,7 +77,7 @@ import com.github.nfalco79.bitbucket.client.model.Webhook;
 
 /**
  * Client of Bitbucket Cloud.
- * 
+ *
  * @author Nikolas Falco
  */
 public class BitbucketCloudClient implements Closeable {
@@ -86,39 +89,27 @@ public class BitbucketCloudClient implements Closeable {
     private static final String PATH_PARAM_PR_ID = "pull_request_id";
     private static final String PATH_PARAM_REPOSITORY = "repository";
     private static final String PATH_PARAM_WORKSPACE = "workspace";
+    private static final String PATH_PARAM_USER = "user";
     private static final String PATH_PARAM_GROUP = "group";
-    private static final String PATH_PARAM_GROUPOWNER = "group_owner";
-    private static final String QUERY_PARAM_TERM = "term";
-    private static final String QUERY_PARAM_HAS_ACCESS = "hasAccess";
+//    private static final String PATH_PARAM_GROUPOWNER = "group_owner";
+//    private static final String QUERY_PARAM_TERM = "term";
+//    private static final String QUERY_PARAM_HAS_ACCESS = "hasAccess";
     private static final String QUERY_PARAM_PAGELEN = "pagelen";
     private static final String QUERY_PARAM_QUERY = "q";
     private static final String QUERY_PARAM_FIELDS = "fields";
 
     private static final String FORM_PARAM_GRANT_TYPE = "grant_type";
     private static final String FORM_PARAM_REFRESH_TOKEN = "refresh_token";
-    @SuppressWarnings("unused")
-    private static final String GRANT_TYPE_AC = "authorization_code";
+//    private static final String GRANT_TYPE_AC = "authorization_code";
     private static final String GRANT_TYPE_CC = "client_credentials";
-    @SuppressWarnings("unused")
-    private static final String GRANT_TYPE_JWT = "urn:bitbucket:oauth2:jwt";
+//    private static final String GRANT_TYPE_JWT = "urn:bitbucket:oauth2:jwt";
     private static final String GRANT_TYPE_REFRESH = "refresh_token";
 
     private static final String DEFAULT_PAGE_LEN = "100";
 
     // deprecated 1.0 API not available in 2.0
     private static final String API_V1 = "https://api.bitbucket.org/1.0";
-    private static final String GROUP_API_V1 = API_V1 + "/group-privileges/{workspace}/{repository}/{group_owner}/{group}";
-
-    // not documented APIs
-    private static final String NO_API_V1 = "https://bitbucket.org/!api/1.0";
-    private static final String GROUP_NO_API = NO_API_V1 + "/group-privileges/{workspace}/{repository}";
-
-    // internal APIs
-    private static final String INTERNAL_API = "https://bitbucket.org/!api/internal";
-    private static final String GROUP_NO_API_INTERNAL = INTERNAL_API + "/_group-privileges-to-add/{workspace}/{repository}";
-    @SuppressWarnings("unused")
-    private static final String PRIVILEGES_NO_API_INTERNAL = INTERNAL_API + "/user-and-group-privileges/{workspace}/{repository}";
-    private static final String USER_NO_API_INTERNAL = INTERNAL_API + "/repositories/{workspace}/{repository}/users";
+    private static final String WORKSPACE_GROUP = API_V1 + "/groups/{workspace}";
 
     // REST 2.0 APIs
     private static final String OAUTH2 = "https://bitbucket.org/site/oauth2/access_token";
@@ -126,15 +117,20 @@ public class BitbucketCloudClient implements Closeable {
     private static final String WORKSPACE = API_V2 + "/workspaces/{workspace}";
     private static final String PERMISSIONS = WORKSPACE + "/permissions/repositories/{repository}";
 
-    private static final String REPOSITORY = API_V2 + "/repositories/{workspace}";
-    private static final String REPOSITORY_BRANCH_RESTRICTIONS = REPOSITORY + "/{repository}/branch-restrictions";
-    private static final String REPOSITORY_WEBHOOKS = REPOSITORY + "/{repository}/hooks";
-    private static final String REPOSITORY_PR = REPOSITORY + "/{repository}/pullrequests";
+    private static final String WORKSPACE_REPOSITORY = API_V2 + "/repositories/{workspace}";
+    private static final String REPOSITORY = WORKSPACE_REPOSITORY + "/{repository}";
+    private static final String REPOSITORY_USER_PERMISSION = REPOSITORY + "/permissions-config/users/{user}";
+    private static final String REPOSITORY_GROUP_PERMISSION = REPOSITORY + "/permissions-config/groups";
+    private static final String REPOSITORY_BRANCH_RESTRICTIONS = REPOSITORY + "/branch-restrictions";
+    private static final String REPOSITORY_WEBHOOKS = REPOSITORY + "/hooks";
+    private static final String REPOSITORY_PR = REPOSITORY + "/pullrequests";
     private static final String REPOSITORY_PR_ACTIVITY = REPOSITORY_PR + "/{pull_request_id}/activity";
     private static final String REPOSITORY_PR_APPROVE = REPOSITORY_PR + "/{pull_request_id}/approve";
 
-    private static final String USER = API_V2 + "/user";
-    private static final String USER_PERMISSIONS = USER + "/permissions/repositories";
+    private static final String LOGGED_USER = API_V2 + "/user";
+    private static final String LOGGED_USER_PERMISSIONS = API_V2 + "/user/permissions/repositories";
+    private static final String USER = API_V2 + "/users";
+    private static final String USER_INFO = USER + "/{user}";
 
     protected final Logger logger = Logger.getLogger("BitcketCloudClient");
 
@@ -154,8 +150,8 @@ public class BitbucketCloudClient implements Closeable {
      */
     public BitbucketCloudClient(Credentials credentials) {
         this.credentials = credentials;
-        buildJSONConverter();
-        buildClient();
+        objectMapper = buildJSONConverter();
+        client = buildClient();
         buildAuthentication();
     }
 
@@ -184,37 +180,45 @@ public class BitbucketCloudClient implements Closeable {
 
     @SuppressWarnings("unchecked")
     protected <T> T process(HttpUriRequest request, Object type) throws ClientException {
-        CloseableHttpResponse response = null;
         try {
             setupRequest(request);
-            response = client.execute(request);
+            if (isDryRun() && !"GET".equalsIgnoreCase(request.getMethod())) {
+                logger.info(request.getMethod() + " " + request.getRequestUri());
+                ByteArrayOutputStream payload = new ByteArrayOutputStream();
+                request.getEntity().writeTo(payload);
+                logger.info(payload.toString());
+                return null;
+            } else {
+                HttpClientResponseHandler<? extends T> responseHandler = (response) -> {
+                    if (response.getCode() >= HttpStatus.SC_OK //
+                            && response.getCode() < 300) {
+                        try {
+                            if (type instanceof Class) {
+                                return objectMapper.readValue(response.getEntity().getContent(), (Class<T>) type);
+                            } else if (type instanceof TypeReference) {
+                                return objectMapper.readValue(response.getEntity().getContent(), (TypeReference<T>) type);
+                            } else {
+                                return null;
+                            }
+                        } catch (UnsupportedOperationException | IOException e) {
+                            throw new ClientException("Fail to deserialize response.", e);
+                        }
+                    } else if (response.getCode() == HttpStatus.SC_UNAUTHORIZED && isTokenExpired()) {
+                        authToken = refreshToken();
+                        tokenExpiration = LocalDateTime.now().plusSeconds(authToken.getExpiry());
+                    } else if (response.getCode() >= HttpStatus.SC_BAD_REQUEST //
+                            && response.getCode() < HttpStatus.SC_SERVER_ERROR //
+                            && response.getCode() != HttpStatus.SC_CONFLICT) { // conflict
+                        throw new ClientException(response);
+                    }
+                    throw new ClientException(response);
+                };
+
+                return client.execute(request, responseHandler);
+            }
         } catch (IOException e) {
             throw new ClientException("Client fails on URL " + request.getRequestUri(), e);
         }
-
-        if (response.getCode() >= HttpStatus.SC_OK //
-                && response.getCode() < 300) {
-            try {
-                if (type instanceof Class) {
-                    return objectMapper.readValue(response.getEntity().getContent(), (Class<T>) type);
-                } else if (type instanceof TypeReference) {
-                    return objectMapper.readValue(response.getEntity().getContent(), (TypeReference<T>) type);
-                } else {
-                    return null;
-                }
-            } catch (UnsupportedOperationException | IOException e) {
-                throw new ClientException("Fail to deserialize response.", e);
-            }
-        } else if (response.getCode() == HttpStatus.SC_UNAUTHORIZED && isTokenExpired()) {
-            authToken = refreshToken();
-            tokenExpiration = LocalDateTime.now().plusSeconds(authToken.getExpiry());
-        } else if (response.getCode() >= HttpStatus.SC_BAD_REQUEST //
-                && response.getCode() < HttpStatus.SC_SERVER_ERROR //
-                && response.getCode() != HttpStatus.SC_CONFLICT) { // conflict
-            throw new ClientException(response);
-        }
-
-        throw new ClientException(response);
     }
 
     private <T> T process(HttpUriRequest request) throws ClientException {
@@ -229,7 +233,25 @@ public class BitbucketCloudClient implements Closeable {
      *         than 20x codes
      */
     public UserInfo getUser() throws ClientException {
-        return process(new HttpGet(USER), UserInfo.class);
+        return process(new HttpGet(LOGGED_USER), UserInfo.class);
+    }
+
+    /**
+     * Get logged user details
+     *
+     * @param username the user UUID or the Atlassian account identifier.
+     * @return user details
+     * @throws ClientException in case of HTTP response from server different
+     *         than 20x codes
+     */
+    public UserInfo getUser(String username) throws ClientException {
+        String requestURI = UriTemplate.buildFromTemplate(USER_INFO) //
+                .query(QUERY_PARAM_FIELDS) //
+                .build() //
+                .set(PATH_PARAM_USER, username) //
+                .set(QUERY_PARAM_FIELDS, "-links") //
+                .expand();
+        return process(new HttpGet(requestURI), UserInfo.class);
     }
 
     /**
@@ -259,7 +281,7 @@ public class BitbucketCloudClient implements Closeable {
      *         than 20x codes
      */
     public List<Repository> getRepositories(String workspace) throws ClientException {
-        String requestURI = UriTemplate.buildFromTemplate(REPOSITORY) //
+        String requestURI = UriTemplate.buildFromTemplate(WORKSPACE_REPOSITORY) //
                 .query(QUERY_PARAM_PAGELEN) //
                 .build() //
                 .set(QUERY_PARAM_PAGELEN, DEFAULT_PAGE_LEN) //
@@ -277,7 +299,7 @@ public class BitbucketCloudClient implements Closeable {
      *         than 20x codes
      */
     public Permission getPermission(String repository) throws ClientException {
-        String requestURI = UriTemplate.buildFromTemplate(USER_PERMISSIONS) //
+        String requestURI = UriTemplate.buildFromTemplate(LOGGED_USER_PERMISSIONS) //
                 .query(QUERY_PARAM_PAGELEN, QUERY_PARAM_QUERY) //
                 .build() //
                 .set(QUERY_PARAM_PAGELEN, DEFAULT_PAGE_LEN) //
@@ -294,24 +316,18 @@ public class BitbucketCloudClient implements Closeable {
     }
 
     /**
-     * Find groups which doesn't have access rights to the given repository.
-     * <p>
-     * This API is not available with access token credentials.
+     * Returns all groups registered to a workspace.
      *
      * @param workspace name
-     * @param repository name
-     * @return all the existing groups that doesn't have access rights to the
-     *         repository
+     * @return all the existing groups for the given workspace
      * @throws ClientException in case of HTTP response from server different
      *         than 20x codes
      */
-    public List<String> findAvailableGroups(String workspace, String repository) throws ClientException {
-        String requestURI = UriTemplate.buildFromTemplate(GROUP_NO_API_INTERNAL).build() //
+    public List<GroupInfo> getGroups(String workspace) throws ClientException {
+        String requestURI = UriTemplate.buildFromTemplate(WORKSPACE_GROUP).build() //
                 .set(PATH_PARAM_WORKSPACE, workspace) //
-                .set(PATH_PARAM_REPOSITORY, repository) //
                 .expand();
-        List<GroupInfo> groups = process(new HttpGet(requestURI), new TypeReference<List<GroupInfo>>() {});
-        return groups.stream().map(GroupInfo::getSlug).collect(Collectors.toList());
+        return process(new HttpGet(requestURI), new TypeReference<List<GroupInfo>>() {});
     }
 
     /**
@@ -326,16 +342,16 @@ public class BitbucketCloudClient implements Closeable {
      * @throws ClientException in case of HTTP response from server different
      *         than 20x codes
      */
-    public Map<String, Permission> getGroupsPermission(String workspace, String repository) throws ClientException {
-        String requestURI = UriTemplate.buildFromTemplate(GROUP_NO_API) //
+    public Map<GroupInfo, Permission> getGroupsPermissions(String workspace, String repository) throws ClientException {
+        String requestURI = UriTemplate.buildFromTemplate(REPOSITORY_GROUP_PERMISSION) //
                 .build() //
                 .set(PATH_PARAM_WORKSPACE, workspace) //
                 .set(PATH_PARAM_REPOSITORY, repository) //
-                .expand() + "?exclude-members=1";
+                .expand();
+        List<GroupPermission> data = getPaginated(requestURI, GroupPermissionResponse.class);
         // Each group associated to its privilege
-        List<GroupPermissionResponse> data = process(new HttpGet(requestURI), new TypeReference<List<GroupPermissionResponse>>() {});
         return data.stream() //
-                .collect(Collectors.toMap(group -> group.getGroup().getSlug(), GroupPermissionResponse::getPrivilege));
+                .collect(Collectors.toMap(GroupPermission::getGroup, GroupPermission::getPermission));
     }
 
     /**
@@ -352,15 +368,16 @@ public class BitbucketCloudClient implements Closeable {
      *         than 20x codes
      */
     public List<UserInfo> findUser(String workspace, String repository, String filter) throws ClientException {
-        String requestURI = UriTemplate.buildFromTemplate(USER_NO_API_INTERNAL) //
-                .query(QUERY_PARAM_HAS_ACCESS, QUERY_PARAM_TERM) //
-                .build() //
-                .set(QUERY_PARAM_HAS_ACCESS, false) //
-                .set(QUERY_PARAM_TERM, filter) //
-                .set(PATH_PARAM_WORKSPACE, workspace) //
-                .set(PATH_PARAM_REPOSITORY, repository) //
-                .expand();
-        return process(new HttpGet(requestURI), new TypeReference<List<UserInfo>>() {});
+//        String requestURI = UriTemplate.buildFromTemplate(USER_NO_API_INTERNAL) //
+//                .query(QUERY_PARAM_HAS_ACCESS, QUERY_PARAM_TERM) //
+//                .build() //
+//                .set(QUERY_PARAM_HAS_ACCESS, false) //
+//                .set(QUERY_PARAM_TERM, filter) //
+//                .set(PATH_PARAM_WORKSPACE, workspace) //
+//                .set(PATH_PARAM_REPOSITORY, repository) //
+//                .expand();
+//        return process(new HttpGet(requestURI), new TypeReference<List<UserInfo>>() {});
+        throw new UnsupportedOperationException("re implement on need using the new REST API v2.0");
     }
 
     /**
@@ -391,23 +408,23 @@ public class BitbucketCloudClient implements Closeable {
      *
      * @param workspace name
      * @param repository the repository name
-     * @param groupName the group name
+     * @param groupSlug the group name
      * @param accessLevel read, write or admin access level
      * @throws ClientException in case of HTTP response from server different
      *         than 20x codes
      */
-    public void updateGroupAccess(String workspace, String repository, String groupName, Permission accessLevel) throws ClientException {
-        String requestURI = UriTemplate.buildFromTemplate(GROUP_API_V1) //
+    public void updateGroupPermission(String workspace, String repository, String groupSlug, Permission accessLevel) throws ClientException {
+        String requestURI = UriTemplate.buildFromTemplate(REPOSITORY_GROUP_PERMISSION) //
+                .path(PATH_PARAM_GROUP) //
                 .build() //
                 .set(PATH_PARAM_WORKSPACE, workspace) //
                 .set(PATH_PARAM_REPOSITORY, repository) //
-                .set(PATH_PARAM_GROUPOWNER, workspace) //
-                .set(PATH_PARAM_GROUP, groupName) //
+                .set(PATH_PARAM_GROUP, groupSlug) //
                 .expand();
-
         HttpPut request = new HttpPut(requestURI);
-        request.setEntity(new StringEntity(accessLevel.toString().toLowerCase()));
-        request.addHeader(HttpHeaders.CONTENT_TYPE, "text/plain; charset=utf-8");
+        GroupPermission entity = new GroupPermission();
+        entity.setPermission(accessLevel);
+        request.setEntity(asJSONEntity(entity));
         process(request);
     }
 
@@ -438,25 +455,29 @@ public class BitbucketCloudClient implements Closeable {
         return data.getValues().get(0);
     }
 
-    /*
-     * This INTERNAL API does not work anymore, it require a session
-     * authentication
+    /**
+     * Set user right on a specified repository.
+     *
+     * @param workspace name
+     * @param repository the repository name
+     * @param userId bitbucker UUID or Atlassian account Identifier
+     * @param accessLevel read, write or admin access level
+     * @throws ClientException in case of HTTP response from server different
+     *         than 20x codes
      */
-    public void updateUserAccess(String repository, List<String> usernameIds, Permission accessLevel) {
-        logger.log(Level.SEVERE, "Users {0} must be registered manually for {1} rights on repository {2}, no API works at the moment.", //
-                new Object[] { usernameIds, accessLevel, repository });
-        // URI requestURI =
-        // UriBuilder.fromUri(PRIVILEGES_NO_API_INTERNAL).build(OWNER,
-        // repository);
-        //
-        // PrivilegesRequest payload = new PrivilegesRequest();
-        // usernameIds.forEach(id -> {
-        // Principal p = new Principal();
-        // p.setAccountId(id);
-        // payload.getPrincipals().add(p);
-        // });
-        // payload.setPrivilege(accessLevel);
-        // try (Response response = post(createBuilder(requestURI), payload)) {}
+    public void updateUserPermission(String workspace, String repository, String userId, Permission accessLevel) throws ClientException {
+        String requestURI = UriTemplate.buildFromTemplate(REPOSITORY_USER_PERMISSION) //
+                .query(QUERY_PARAM_QUERY) //
+                .build() //
+                .set(PATH_PARAM_WORKSPACE, workspace) //
+                .set(PATH_PARAM_REPOSITORY, repository) //
+                .set(PATH_PARAM_USER, userId) //
+                .expand();
+        HttpPut request = new HttpPut(requestURI);
+        UserPermission entity = new UserPermission();
+        entity.setPermission(accessLevel);
+        request.setEntity(asJSONEntity(entity));
+        process(request, UserPermission.class);
     }
 
     /**
@@ -465,17 +486,17 @@ public class BitbucketCloudClient implements Closeable {
      *
      * @param workspace name
      * @param repository the repository name
-     * @param groupName the group name
+     * @param groupSlug the group slug name
      * @throws ClientException in case of HTTP response from server different
      *         than 20x codes
      */
-    public void deleteGroupAccess(String workspace, String repository, String groupName) throws ClientException {
-        String requestURI = UriTemplate.buildFromTemplate(GROUP_API_V1) //
+    public void deleteGroupPermission(String workspace, String repository, String groupSlug) throws ClientException {
+        String requestURI = UriTemplate.buildFromTemplate(REPOSITORY_GROUP_PERMISSION) //
+                .path(PATH_PARAM_GROUP) //
                 .build() //
                 .set(PATH_PARAM_WORKSPACE, workspace) //
                 .set(PATH_PARAM_REPOSITORY, repository) //
-                .set(PATH_PARAM_GROUPOWNER, workspace) //
-                .set(PATH_PARAM_GROUP, groupName) //
+                .set(PATH_PARAM_GROUP, groupSlug) //
                 .expand();
         process(new HttpDelete(requestURI));
     }
@@ -494,7 +515,7 @@ public class BitbucketCloudClient implements Closeable {
 
         HttpUriRequestBase request;
         if (permission.getId() != null) {
-            String requestURI = template.path("{id}") //
+            String requestURI = template.path("id") //
                     .build() //
                     .set(PATH_PARAM_WORKSPACE, workspace) //
                     .set(PATH_PARAM_REPOSITORY, repository) //
@@ -523,7 +544,6 @@ public class BitbucketCloudClient implements Closeable {
      *         than 20x codes
      */
     public List<Webhook> getWebhooks(String workspace, String repository, String... hookName) throws ClientException {
-
         String uri = UriTemplate.buildFromTemplate(REPOSITORY_WEBHOOKS) //
                 .query(QUERY_PARAM_PAGELEN) //
                 .build() //
@@ -552,7 +572,7 @@ public class BitbucketCloudClient implements Closeable {
      */
     public Webhook updateWebhook(String workspace, String repository, Webhook webhook) throws ClientException {
         String requestURI = UriTemplate.buildFromTemplate(REPOSITORY_WEBHOOKS) //
-                .path("{id}") //
+                .path("id") //
                 .build() //
                 .set(PATH_PARAM_WORKSPACE, workspace) //
                 .set(PATH_PARAM_REPOSITORY, repository) //
@@ -573,7 +593,8 @@ public class BitbucketCloudClient implements Closeable {
      *         than 20x codes
      */
     public void deleteWebhook(String workspace, String repository, String webhookId) throws ClientException {
-        String requestURI = UriTemplate.buildFromTemplate(REPOSITORY_WEBHOOKS).path("{id}") //
+        String requestURI = UriTemplate.buildFromTemplate(REPOSITORY_WEBHOOKS) //
+                .path("id") //
                 .build() //
                 .set(PATH_PARAM_WORKSPACE, workspace) //
                 .set(PATH_PARAM_REPOSITORY, repository) //
@@ -688,9 +709,10 @@ public class BitbucketCloudClient implements Closeable {
         }
     }
 
-    private void setupRequest(HttpUriRequest request) throws ClientException {
+    protected void setupRequest(HttpUriRequest request) throws ClientException {
         addHeader(request, HttpHeaders.ACCEPT, "application/json;charset=utf-8");
         addHeader(request, HEADER_CSRF, "no-check");
+        addHeader(request, HttpHeaders.CONTENT_TYPE, "application/json;charset=utf-8");
         credentials.apply(request);
     }
 
@@ -714,6 +736,7 @@ public class BitbucketCloudClient implements Closeable {
         HttpPost request = new HttpPost(OAUTH2);
         request.setEntity(new UrlEncodedFormEntity(Arrays.asList( //
                 new BasicNameValuePair(FORM_PARAM_GRANT_TYPE, GRANT_TYPE_CC))));
+        addHeader(request, HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
         return process(request, AuthToken.class);
     }
 
@@ -725,18 +748,17 @@ public class BitbucketCloudClient implements Closeable {
         return hasOAuth() && authToken != null && LocalDateTime.now().isAfter(tokenExpiration);
     }
 
-    protected void buildClient() {
-        // BasicCredentialsProvider credsProvider = new
-        // BasicCredentialsProvider();
-        client = HttpClients.custom() //
-                // .setDefaultCredentialsProvider(credsProvider) //
+    protected CloseableHttpClient buildClient() {
+        return HttpClients.custom() //
                 .setRetryStrategy(new DefaultHttpRequestRetryStrategy(retry, TimeValue.ofSeconds(2))) //
                 .build();
     }
 
-    private void buildJSONConverter() {
-        objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private ObjectMapper buildJSONConverter() {
+        ObjectMapper jsonMapper = new ObjectMapper();
+        jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        jsonMapper.setSerializationInclusion(Include.NON_NULL);
+        return jsonMapper;
     }
 
     private HttpEntity asJSONEntity(Object object) throws ClientException {

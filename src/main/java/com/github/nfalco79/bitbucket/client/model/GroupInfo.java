@@ -27,10 +27,13 @@ public class GroupInfo extends BitbucketObject {
     private UserInfo owner;
 
     public GroupInfo() {
+        setType("group");
     }
 
     public GroupInfo(String slug) {
+        this();
         this.slug = slug;
+        setName(slug);
     }
 
     /**
@@ -56,7 +59,7 @@ public class GroupInfo extends BitbucketObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(slug);
+        return Objects.hash(getType(), getName());
     }
 
     @Override
@@ -64,15 +67,18 @@ public class GroupInfo extends BitbucketObject {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof GroupInfo)) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
             return false;
         }
         GroupInfo other = (GroupInfo) obj;
-        return Objects.equals(slug, other.slug);
+        return Objects.equals(getType(), other.getType()) && Objects.equals(getName(), other.getName());
     }
 
     @Override
     public String toString() {
-        return slug;
+        return getName() == null ? slug : getName();
     }
 }

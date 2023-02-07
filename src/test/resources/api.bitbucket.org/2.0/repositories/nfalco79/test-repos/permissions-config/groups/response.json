@@ -1,0 +1,127 @@
+{
+    "values": [
+        {
+            "type": "repository_group_permission",
+            "permission": "admin",
+            "group": {
+                "type": "group",
+                "owner": {
+                    "display_name": "nfalco79",
+                    "links": {
+                        "self": {
+                            "href": "https://api.bitbucket.org/2.0/workspaces/%7B2f053ac1-4c69-4188-8014-43c976bf1c7c%7D"
+                        },
+                        "avatar": {
+                            "href": "https://bitbucket.org/account/nfalco79/avatar/"
+                        },
+                        "html": {
+                            "href": "https://bitbucket.org/%7B2f053ac1-4c69-4188-8014-43c976bf1c7c%7D/"
+                        }
+                    },
+                    "type": "team",
+                    "uuid": "{2f053ac1-4c69-4188-8014-43c976bf1c7c}",
+                    "username": "nfalco79"
+                },
+                "workspace": {
+                    "type": "workspace",
+                    "uuid": "{2f053ac1-4c69-4188-8014-43c976bf1c7c}",
+                    "name": "nfalco79",
+                    "slug": "nfalco79",
+                    "links": {
+                        "avatar": {
+                            "href": "https://bitbucket.org/workspaces/nfalco79/avatar/?ts=1674487698"
+                        },
+                        "html": {
+                            "href": "https://bitbucket.org/nfalco79/"
+                        },
+                        "self": {
+                            "href": "https://api.bitbucket.org/2.0/workspaces/nfalco79"
+                        }
+                    }
+                },
+                "slug": "devops",
+                "full_slug": "nfalco79:devops",
+                "name": "DevOps",
+                "default_permission": "admin",
+                "email_forwarding_disabled": false,
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/1.0/groups/nfalco79/devops"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/nfalco79/workspace/settings/groups/devops"
+                    }
+                },
+                "account_privilege": "collaborator"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/nfalco79/test-repos/permissions-config/groups/devops"
+                }
+            }
+        },
+        {
+            "type": "repository_group_permission",
+            "permission": "admin",
+            "group": {
+                "type": "group",
+                "owner": {
+                    "display_name": "nfalco79",
+                    "links": {
+                        "self": {
+                            "href": "https://api.bitbucket.org/2.0/workspaces/%7B2f053ac1-4c69-4188-8014-43c976bf1c7c%7D"
+                        },
+                        "avatar": {
+                            "href": "https://bitbucket.org/account/nfalco79/avatar/"
+                        },
+                        "html": {
+                            "href": "https://bitbucket.org/%7B2f053ac1-4c69-4188-8014-43c976bf1c7c%7D/"
+                        }
+                    },
+                    "type": "team",
+                    "uuid": "{2f053ac1-4c69-4188-8014-43c976bf1c7c}",
+                    "username": "nfalco79"
+                },
+                "workspace": {
+                    "type": "workspace",
+                    "uuid": "{2f053ac1-4c69-4188-8014-43c976bf1c7c}",
+                    "name": "nfalco79",
+                    "slug": "nfalco79",
+                    "links": {
+                        "avatar": {
+                            "href": "https://bitbucket.org/workspaces/nfalco79/avatar/?ts=1674487698"
+                        },
+                        "html": {
+                            "href": "https://bitbucket.org/nfalco79/"
+                        },
+                        "self": {
+                            "href": "https://api.bitbucket.org/2.0/workspaces/nfalco79"
+                        }
+                    }
+                },
+                "slug": "administrators",
+                "full_slug": "nfalco79:administrators",
+                "name": "Administrators",
+                "default_permission": "admin",
+                "email_forwarding_disabled": true,
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/1.0/groups/nfalco79/administrators"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/nfalco79/workspace/settings/groups/administrators"
+                    }
+                },
+                "account_privilege": "admin"
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/nfalco79/test-repos/permissions-config/groups/administrators"
+                }
+            }
+        }
+    ],
+    "pagelen": 10,
+    "size": 2,
+    "page": 1
+}

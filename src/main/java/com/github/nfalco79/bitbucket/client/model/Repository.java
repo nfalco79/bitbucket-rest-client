@@ -86,4 +86,9 @@ public class Repository extends BitbucketObject {
     public void setWorkspace(Workspace workspace) {
         this.workspace = workspace;
     }
+
+    @Override
+    public String toString() {
+        return slug;
+    }
 }
