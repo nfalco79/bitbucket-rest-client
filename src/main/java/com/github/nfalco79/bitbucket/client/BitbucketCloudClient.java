@@ -123,9 +123,10 @@ public class BitbucketCloudClient implements Closeable {
     private static final String REPOSITORY_GROUP_PERMISSION = REPOSITORY + "/permissions-config/groups";
     private static final String REPOSITORY_BRANCH_RESTRICTIONS = REPOSITORY + "/branch-restrictions";
     private static final String REPOSITORY_WEBHOOKS = REPOSITORY + "/hooks";
-    private static final String REPOSITORY_PR = REPOSITORY + "/pullrequests";
-    private static final String REPOSITORY_PR_ACTIVITY = REPOSITORY_PR + "/{pull_request_id}/activity";
-    private static final String REPOSITORY_PR_APPROVE = REPOSITORY_PR + "/{pull_request_id}/approve";
+    private static final String REPOSITORY_PRS = REPOSITORY + "/pullrequests";
+    private static final String REPOSITORY_PR = REPOSITORY + "/pullrequests/{pull_request_id}";
+    private static final String REPOSITORY_PR_ACTIVITY = REPOSITORY_PRS + "/{pull_request_id}/activity";
+    private static final String REPOSITORY_PR_APPROVE = REPOSITORY_PRS + "/{pull_request_id}/approve";
 
     private static final String LOGGED_USER = API_V2 + "/user";
     private static final String LOGGED_USER_PERMISSIONS = API_V2 + "/user/permissions/repositories";
@@ -152,6 +153,13 @@ public class BitbucketCloudClient implements Closeable {
         this.credentials = credentials;
         objectMapper = buildJSONConverter();
         client = buildClient();
+        buildAuthentication();
+    }
+
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
+        authToken = null;
+        tokenExpiration = null;
         buildAuthentication();
     }
 
@@ -633,11 +641,30 @@ public class BitbucketCloudClient implements Closeable {
      *         than 20x codes
      */
     public List<PullRequest> getPullRequests(String workspace, String repository) throws ClientException {
-        String requestURI = UriTemplate.fromTemplate(REPOSITORY_PR) //
+        String requestURI = UriTemplate.fromTemplate(REPOSITORY_PRS) //
                 .set(PATH_PARAM_WORKSPACE, workspace) //
                 .set(PATH_PARAM_REPOSITORY, repository) //
                 .expand();
         return getPaginated(requestURI, PullRequestResponse.class);
+    }
+
+    /**
+     * Gets the pull request matching the identifier for the given repository.
+     *
+     * @param workspace bitbucket
+     * @param repository the repository name
+     * @param prId the pull request identifier
+     * @return pull requests matching the given identifier
+     * @throws ClientException in case of HTTP response from server different
+     *         than 20x codes
+     */
+    public PullRequest getPullRequest(String workspace, String repository, int prId) throws ClientException {
+        String requestURI = UriTemplate.fromTemplate(REPOSITORY_PR) //
+                .set(PATH_PARAM_WORKSPACE, workspace) //
+                .set(PATH_PARAM_REPOSITORY, repository) //
+                .set(PATH_PARAM_PR_ID, prId) //
+                .expand();
+        return process(new HttpGet(requestURI), PullRequest.class);
     }
 
     /**

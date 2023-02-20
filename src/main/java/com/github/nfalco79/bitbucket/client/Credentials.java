@@ -25,7 +25,7 @@ import org.apache.hc.core5.http.HttpRequest;
  * This object represent the credentials to use in {@link BitbucketCloudClient}.
  * <p>
  * The implementations also setup a request with proper authentication.
- * 
+ *
  * @author Nikolas Falco
  */
 public abstract class Credentials {
@@ -38,6 +38,23 @@ public abstract class Credentials {
         public static Credentials appPassword(String user, String password) {
             return new AppPassword(user, password);
         }
+
+        public static Credentials build(String key, String secret) {
+            if (key == null || secret == null) {
+                throw new IllegalArgumentException("key or secreat is missing");
+            }
+
+            if (isOAuthCredentials(key, secret)) {
+                return oauth2(key, secret);
+            } else {
+                return appPassword(key, secret);
+            }
+        }
+
+        private static boolean isOAuthCredentials(String key, String secret) {
+            return !key.contains("@") && key.length() == 18 && secret.length() == 32;
+        }
+
     }
 
     /* package */ static class AppPassword extends Credentials {
