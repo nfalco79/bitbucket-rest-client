@@ -53,6 +53,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.nfalco79.bitbucket.client.Credentials.CredentialsBuilder;
 import com.github.nfalco79.bitbucket.client.Credentials.OAuth2Consumer;
 import com.github.nfalco79.bitbucket.client.internal.rest.BranchPermissionResponse;
 import com.github.nfalco79.bitbucket.client.internal.rest.CodeInsightsReportResponse;
@@ -157,7 +158,7 @@ public class BitbucketCloudClient implements Closeable {
      * @param credentials the object containing the server info
      */
     public BitbucketCloudClient(Credentials credentials) {
-        this.credentials = credentials;
+        this.credentials = credentials == null ? CredentialsBuilder.anonymous() : credentials;
         objectMapper = buildJSONConverter();
         client = buildClient();
         buildAuthentication();

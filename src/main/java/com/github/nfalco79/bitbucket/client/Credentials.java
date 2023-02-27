@@ -39,6 +39,14 @@ public abstract class Credentials {
             return new AppPassword(user, password);
         }
 
+        public static Credentials anonymous() {
+            return new Credentials(null, null) {
+                @Override
+                public void apply(HttpRequest request) {
+                }
+            };
+        }
+
         public static Credentials build(String key, String secret) {
             if (key == null || secret == null) {
                 throw new IllegalArgumentException("key or secreat is missing");
