@@ -1,0 +1,61 @@
+{
+    "page": 1,
+    "values": [
+        {
+            "type": "report",
+            "uuid": "{b1baeb85-bda5-54a6-976b-d41d303ab75d}",
+            "title": "SonarQube",
+            "details": "Quality Gate passed\n",
+            "external_id": "com.acme:datamigration",
+            "reporter": "SonarQube",
+            "created_by": {
+                "type": "user",
+                "uuid": "{2f053ac1-4c69-4188-8014-43c976bf1c7c}"
+            },
+            "link": "https://sonarqube.acme.com/dashboard?id=com.acme%3Adatamigration&pullRequest=1",
+            "logo_url": "https://sonarqube.acme.com/static/communityBranchPlugin/common/icon.png",
+            "report_type": "COVERAGE",
+            "result": "PASSED",
+            "remote_link_enabled": true,
+            "data": [
+                {
+                    "title": "Reliability",
+                    "type": "TEXT",
+                    "value": "0 Bugs"
+                },
+                {
+                    "title": "Code coverage",
+                    "type": "PERCENTAGE",
+                    "value": 0
+                },
+                {
+                    "title": "Security",
+                    "type": "TEXT",
+                    "value": "0 Vulnerabilities (and 0 Hotspots)"
+                },
+                {
+                    "title": "Duplication",
+                    "type": "PERCENTAGE",
+                    "value": 0
+                },
+                {
+                    "title": "Maintainability",
+                    "type": "TEXT",
+                    "value": "0 Code Smells"
+                },
+                {
+                    "title": "Analysis details",
+                    "type": "LINK",
+                    "value": {
+                        "text": "Go to SonarQube",
+                        "href": "https://sonarqube.acme.com/dashboard?id=com.acme%3Adatamigration&pullRequest=1"
+                    }
+                }
+            ],
+            "created_on": "2023-02-27T16:28:26.103296Z",
+            "updated_on": "2023-02-27T16:28:26.103296Z"
+        }
+    ],
+    "size": 1,
+    "pagelen": 1
+}

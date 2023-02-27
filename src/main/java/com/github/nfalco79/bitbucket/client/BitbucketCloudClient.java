@@ -55,9 +55,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.nfalco79.bitbucket.client.Credentials.OAuth2Consumer;
 import com.github.nfalco79.bitbucket.client.internal.rest.BranchPermissionResponse;
+import com.github.nfalco79.bitbucket.client.internal.rest.CodeInsightsReportResponse;
 import com.github.nfalco79.bitbucket.client.internal.rest.GroupPermissionResponse;
 import com.github.nfalco79.bitbucket.client.internal.rest.PaginatedResponse;
 import com.github.nfalco79.bitbucket.client.internal.rest.PullRequestActivityResponse;
+import com.github.nfalco79.bitbucket.client.internal.rest.PullRequestCommitsResponse;
 import com.github.nfalco79.bitbucket.client.internal.rest.PullRequestResponse;
 import com.github.nfalco79.bitbucket.client.internal.rest.RepositoryResponse;
 import com.github.nfalco79.bitbucket.client.internal.rest.UserPermissionResponse;
@@ -66,6 +68,8 @@ import com.github.nfalco79.bitbucket.client.model.Activity;
 import com.github.nfalco79.bitbucket.client.model.Approval;
 import com.github.nfalco79.bitbucket.client.model.AuthToken;
 import com.github.nfalco79.bitbucket.client.model.BranchRestriction;
+import com.github.nfalco79.bitbucket.client.model.CodeInsightsReport;
+import com.github.nfalco79.bitbucket.client.model.Commit;
 import com.github.nfalco79.bitbucket.client.model.GroupInfo;
 import com.github.nfalco79.bitbucket.client.model.GroupPermission;
 import com.github.nfalco79.bitbucket.client.model.Permission;
@@ -91,6 +95,7 @@ public class BitbucketCloudClient implements Closeable {
     private static final String PATH_PARAM_WORKSPACE = "workspace";
     private static final String PATH_PARAM_USER = "user";
     private static final String PATH_PARAM_GROUP = "group";
+    private static final String PATH_PARAM_COMMIT = "commit_hash";
 //    private static final String PATH_PARAM_GROUPOWNER = "group_owner";
 //    private static final String QUERY_PARAM_TERM = "term";
 //    private static final String QUERY_PARAM_HAS_ACCESS = "hasAccess";
@@ -125,8 +130,10 @@ public class BitbucketCloudClient implements Closeable {
     private static final String REPOSITORY_WEBHOOKS = REPOSITORY + "/hooks";
     private static final String REPOSITORY_PRS = REPOSITORY + "/pullrequests";
     private static final String REPOSITORY_PR = REPOSITORY + "/pullrequests/{pull_request_id}";
-    private static final String REPOSITORY_PR_ACTIVITY = REPOSITORY_PRS + "/{pull_request_id}/activity";
-    private static final String REPOSITORY_PR_APPROVE = REPOSITORY_PRS + "/{pull_request_id}/approve";
+    private static final String REPOSITORY_PR_ACTIVITY = REPOSITORY_PR + "/activity";
+    private static final String REPOSITORY_PR_APPROVE = REPOSITORY_PR + "/approve";
+    private static final String REPOSITORY_PR_COMMITS = REPOSITORY_PR + "/commits";
+    private static final String COMMIT_CODE_INSIGHTS_REPORTS = REPOSITORY + "/commit/{commit_hash}/reports";
 
     private static final String LOGGED_USER = API_V2 + "/user";
     private static final String LOGGED_USER_PERMISSIONS = API_V2 + "/user/permissions/repositories";
@@ -691,6 +698,65 @@ public class BitbucketCloudClient implements Closeable {
                 .map(Activity::getApproval) //
                 .filter(Objects::nonNull) //
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Gets commits for the specified pull request identifier.
+     *
+     * @param workspace name
+     * @param repository name
+     * @param prId pull request identifier
+     * @return list of pull request commnits
+     * @throws ClientException in case of HTTP response from server different
+     *         than 20x codes
+     */
+    public List<Commit> getPullRequestCommits(String workspace, String repository, int prId) throws ClientException {
+        return getPullRequestCommits(workspace, repository, prId, false);
+    }
+
+    /**
+     * Gets essential information of commits for the specified pull request identifier.
+     *
+     * @param workspace name
+     * @param repository name
+     * @param prId pull request identifier
+     * @param light enable or not a lightweight information for commits
+     * @return list of pull request commits
+     * @throws ClientException in case of HTTP response from server different
+     *         than 20x codes
+     */
+    public List<Commit> getPullRequestCommits(String workspace, String repository, int prId, boolean light) throws ClientException {
+        UriTemplateBuilder builder = UriTemplate.buildFromTemplate(REPOSITORY_PR_COMMITS);
+        UriTemplate template = (light ? builder : builder.query(QUERY_PARAM_FIELDS)).build();
+        if (light) {
+            template = template.set(QUERY_PARAM_FIELDS, "-values.links,-values.repository,-values.parents.links");
+        }
+        String requestURI = template //
+                .set(PATH_PARAM_WORKSPACE, workspace) //
+                .set(PATH_PARAM_REPOSITORY, repository) //
+                .set(PATH_PARAM_PR_ID, prId) //
+                .expand();
+        return getPaginated(requestURI, PullRequestCommitsResponse.class);
+    }
+
+    /**
+     * Gets code insights provides reports of a given commit commit.
+     *
+     * @param workspace name
+     * @param repository name
+     * @param hash of commit
+     * @return list of reports
+     * @throws ClientException in case of HTTP response from server different
+     *         than 20x codes
+     */
+    public List<CodeInsightsReport> getCodeInsightsReports(String workspace, String repository, String hash) throws ClientException {
+        String requestURI = UriTemplate.buildFromTemplate(COMMIT_CODE_INSIGHTS_REPORTS) //
+                .build() //
+                .set(PATH_PARAM_WORKSPACE, workspace) //
+                .set(PATH_PARAM_REPOSITORY, repository) //
+                .set(PATH_PARAM_COMMIT, hash) //
+                .expand();
+        return getPaginated(requestURI, CodeInsightsReportResponse.class);
     }
 
     /**

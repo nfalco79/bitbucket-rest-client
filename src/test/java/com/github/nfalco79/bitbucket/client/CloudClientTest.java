@@ -40,6 +40,8 @@ import com.github.nfalco79.bitbucket.client.model.Approval;
 import com.github.nfalco79.bitbucket.client.model.AuthToken;
 import com.github.nfalco79.bitbucket.client.model.BranchRestriction;
 import com.github.nfalco79.bitbucket.client.model.BranchRestriction.Builder;
+import com.github.nfalco79.bitbucket.client.model.CodeInsightsReport;
+import com.github.nfalco79.bitbucket.client.model.Commit;
 import com.github.nfalco79.bitbucket.client.model.GroupInfo;
 import com.github.nfalco79.bitbucket.client.model.Permission;
 import com.github.nfalco79.bitbucket.client.model.PullRequest;
@@ -148,6 +150,27 @@ public class CloudClientTest {
     }
 
     @Test
+    public void pull_request_commits() throws Exception {
+        List<Commit> commits = client.getPullRequestCommits("nfalco79", "test-repos", 1, true);
+
+        assertThat(commits).anySatisfy(commit -> {
+            assertThat(commit.getHash()).isEqualTo("d645b9e9c84bbc91d694392dfe60758a8b134e30");
+            assertThat(commit.getMessage()).isNotNull();
+        });
+    }
+
+    @Test
+    public void code_insight_reports() throws Exception {
+        List<CodeInsightsReport> reports = client.getCodeInsightsReports("nfalco79", "test-repos", "dd3253a31044");
+
+        assertThat(reports).anySatisfy(report -> {
+            assertThat(report.getReporter()).isEqualTo("SonarQube");
+            assertThat(report.getData()).hasSize(6) //
+                    .anyMatch(data -> "Security".equals(data.getTitle()));
+        });
+    }
+
+    @Test
     public void test_default_content_type_is_application_json() throws Exception {
         AtomicBoolean verifyApplied = new AtomicBoolean(false);
         try (BitbucketCloudClient client = new BitbucketCloudClient(Mockito.mock(Credentials.class)) {
@@ -191,4 +214,5 @@ public class CloudClientTest {
         }
         assertThat(verifyApplied).isTrue().describedAs("No verification has been applied to context-type header");
     }
+
 }

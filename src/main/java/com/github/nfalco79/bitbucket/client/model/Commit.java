@@ -15,10 +15,25 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+
 public class Commit {
     private String hash;
     private String type;
     private Links links;
+    private List<Commit> parents;
+    private Date date;
+    private String author;
+    private String message;
+
+    @JsonProperty("author")
+    private void unpackNameFromNestedObject(JsonNode author) {
+        this.author = author.get("raw").asText();
+    }
 
     public String getHash() {
         return hash;
@@ -42,5 +57,42 @@ public class Commit {
 
     public void setLinks(Links links) {
         this.links = links;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public List<Commit> getParents() {
+        return parents;
+    }
+
+    public void setParents(List<Commit> parents) {
+        this.parents = parents;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    @Override
+    public String toString() {
+        return hash;
     }
 }
