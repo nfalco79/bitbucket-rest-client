@@ -22,6 +22,7 @@ import java.util.Objects;
  */
 
 public class GroupInfo extends BitbucketObject {
+    private static final long serialVersionUID = 6204004493199315972L;
 
     private String slug;
     private UserInfo owner;

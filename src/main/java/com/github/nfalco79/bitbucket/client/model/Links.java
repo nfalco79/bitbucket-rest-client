@@ -15,11 +15,15 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Links {
-    public static class Href {
+public class Links implements Serializable {
+
+    public static class Href implements Serializable {
+        private static final long serialVersionUID = -4969411586903641067L;
+
         private String href;
 
         public String getHref() {
@@ -30,6 +34,8 @@ public class Links {
             this.href = href;
         }
     }
+
+    private static final long serialVersionUID = -772397328837804345L;
 
     private Href repositories;
     private Href watchers;

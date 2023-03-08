@@ -15,6 +15,7 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -22,8 +23,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-public class BranchRestriction {
-
+public class BranchRestriction implements Serializable {
     public static class Builder {
         public static BranchRestriction newPushPermission(String pattern, Set<UserInfo> users, Set<GroupInfo> groups) {
             BranchRestriction p = new BranchRestriction("push", pattern);
@@ -95,6 +95,8 @@ public class BranchRestriction {
             }
         }
     }
+
+    private static final long serialVersionUID = -5772380756877266311L;
 
     private Integer id;
     private String kind;

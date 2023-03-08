@@ -15,9 +15,12 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AuthToken {
+public class AuthToken implements Serializable {
+    private static final long serialVersionUID = -4355642146351239980L;
 
     private String accessToken;
     private String refreshToken;

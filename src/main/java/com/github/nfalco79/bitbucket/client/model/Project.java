@@ -16,4 +16,5 @@
 package com.github.nfalco79.bitbucket.client.model;
 
 public class Project extends BitbucketObject {
+    private static final long serialVersionUID = 2761583828615945636L;
 }

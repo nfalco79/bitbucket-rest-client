@@ -15,7 +15,11 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
-public class BitbucketReference {
+import java.io.Serializable;
+
+public class BitbucketReference implements Serializable {
+    private static final long serialVersionUID = -4234372209303895864L;
+
     private Repository repository;
     private Branch branch;
     private Commit commit;

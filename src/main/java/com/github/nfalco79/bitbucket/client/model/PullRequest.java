@@ -15,13 +15,16 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PullRequest {
+public class PullRequest implements Serializable {
+    private static final long serialVersionUID = -7636025949730656228L;
+
     private Integer id;
     private String type;
     private String title;

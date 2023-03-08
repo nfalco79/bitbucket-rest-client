@@ -15,6 +15,7 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -22,12 +23,14 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-public class Webhook {
+public class Webhook implements Serializable {
     public static final String REPO_PUSH = "repo:push";
     public static final String PULLREQUEST_CREATED = "pullrequest:created";
     public static final String PULLREQUEST_UPDATED = "pullrequest:updated";
     public static final String PULLREQUEST_REJECTED = "pullrequest:rejected";
     public static final String PULLREQUEST_FULFILLED = "pullrequest:fulfilled";
+
+    private static final long serialVersionUID = 6116918397213896441L;
 
     private String uuid;
     private String description;

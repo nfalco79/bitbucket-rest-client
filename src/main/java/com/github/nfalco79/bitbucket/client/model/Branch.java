@@ -15,7 +15,11 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
-public class Branch {
+import java.io.Serializable;
+
+public class Branch implements Serializable {
+    private static final long serialVersionUID = 2125155941368134834L;
+
     private String name;
 
     public String getName() {

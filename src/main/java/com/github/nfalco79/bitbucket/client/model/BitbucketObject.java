@@ -15,11 +15,14 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class BitbucketObject {
+public class BitbucketObject implements Serializable {
+    private static final long serialVersionUID = -5152500947890895477L;
+
     private String key;
     private String name;
     private String uuid;

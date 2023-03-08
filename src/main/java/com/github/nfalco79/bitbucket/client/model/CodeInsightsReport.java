@@ -1,12 +1,13 @@
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CodeInsightsReport {
+public class CodeInsightsReport implements Serializable {
 
     public enum ReportType {
         SECURITY, COVERAGE;
@@ -15,6 +16,8 @@ public class CodeInsightsReport {
     public enum ReportResult {
         FAILED, PASSED;
     }
+
+    private static final long serialVersionUID = 8033145626502387440L;
 
     private String title;
     private String details;

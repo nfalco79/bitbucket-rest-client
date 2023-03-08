@@ -15,9 +15,13 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Activity {
+public class Activity implements Serializable {
+
+    private static final long serialVersionUID = 1599909236035225442L;
 
     private PullRequest update;
     private Approval approval;

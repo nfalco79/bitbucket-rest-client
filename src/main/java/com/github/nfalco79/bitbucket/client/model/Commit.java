@@ -15,17 +15,21 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class Commit {
+public class Commit implements Serializable {
+    private static final long serialVersionUID = -3361311874221857077L;
+
     private String hash;
     private String type;
     private Links links;
-    private List<Commit> parents;
+    private List<Commit> parents = new ArrayList<>(2);
     private Date date;
     private String author;
     private String message;

@@ -15,9 +15,13 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UserPermission {
+public class UserPermission implements Serializable {
+    private static final long serialVersionUID = 5684871562324418393L;
+
     private Permission permission = Permission.NONE;
     private UserInfo user;
 

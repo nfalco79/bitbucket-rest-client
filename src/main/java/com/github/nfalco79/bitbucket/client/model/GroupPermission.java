@@ -15,7 +15,10 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
-public class GroupPermission {
+import java.io.Serializable;
+
+public class GroupPermission implements Serializable {
+    private static final long serialVersionUID = 3114813524309733628L;
 
     private Permission permission = Permission.NONE;
     private GroupInfo group;

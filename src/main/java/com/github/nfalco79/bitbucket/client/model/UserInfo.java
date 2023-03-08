@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Include the details relative to a user to identify it.
  */
 public class UserInfo extends BitbucketObject {
+    private static final long serialVersionUID = 6870115922300250703L;
 
     private String displayName;
     private String nickname;

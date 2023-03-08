@@ -24,6 +24,8 @@ public class Repository extends BitbucketObject {
         NOT_ALLOW
     }
 
+    private static final long serialVersionUID = 7341869803587653835L;
+
     private String slug;
     private Project project;
     private Workspace workspace;

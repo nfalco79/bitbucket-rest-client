@@ -1,6 +1,10 @@
 package com.github.nfalco79.bitbucket.client.model;
 
-public class ReportData {
+import java.io.Serializable;
+
+public class ReportData implements Serializable {
+    private static final long serialVersionUID = -6436611882901128821L;
+
     private String title;
     private String type;
     private Object value;

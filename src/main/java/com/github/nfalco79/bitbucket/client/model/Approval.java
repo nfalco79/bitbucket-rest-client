@@ -15,11 +15,14 @@
  */
 package com.github.nfalco79.bitbucket.client.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Approval {
+public class Approval implements Serializable {
+    private static final long serialVersionUID = -4134668850767085931L;
+
     private Date date;
     private PullRequest pullRequest;
     private UserInfo user;
