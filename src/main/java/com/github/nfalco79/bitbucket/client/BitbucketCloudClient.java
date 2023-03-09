@@ -206,7 +206,9 @@ public class BitbucketCloudClient implements Closeable {
                 return null;
             } else {
                 HttpClientResponseHandler<? extends T> responseHandler = (response) -> {
-                    if (response.getCode() >= HttpStatus.SC_OK //
+                    if (response.getCode() == HttpStatus.SC_NO_CONTENT) {
+                        return null;
+                    } else if (response.getCode() >= HttpStatus.SC_OK //
                             && response.getCode() < 300) {
                         try {
                             if (type instanceof Class) {
