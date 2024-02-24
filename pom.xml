@@ -19,7 +19,7 @@
     <properties>
         <java.level>8</java.level>
 
-        <httpclient.version>5.2.1</httpclient.version>
+        <httpclient.version>5.3.1</httpclient.version>
         <uritemplate.version>2.1.8</uritemplate.version>
         <jackson-databind.version>2.16.1</jackson-databind.version>
     </properties>
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
-            <version>1.7.25</version>
+            <version>1.7.36</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
