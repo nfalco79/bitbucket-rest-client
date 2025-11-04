@@ -5,8 +5,12 @@ import java.io.Serializable;
 public class ReportData implements Serializable {
     private static final long serialVersionUID = -6436611882901128821L;
 
+    public enum ReportDataType {
+        BOOLEAN, DATE, DURATION, LINK, NUMBER, PERCENTAGE, TEXT;
+    }
+
     private String title;
-    private String type;
+    private ReportDataType type;
     private Object value;
 
     public String getTitle() {
@@ -17,11 +21,11 @@ public class ReportData implements Serializable {
         this.title = title;
     }
 
-    public String getType() {
+    public ReportDataType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ReportDataType type) {
         this.type = type;
     }
 

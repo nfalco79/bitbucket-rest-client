@@ -185,7 +185,7 @@ public class BitbucketCloudClient implements Closeable {
     }
 
     private <T> List<T> getPaginated(String uri, Class<? extends PaginatedResponse<T>> type) throws ClientException {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         while (uri != null) {
             PaginatedResponse<T> page = process(new HttpGet(uri), type);
             uri = page.getNext();
@@ -202,10 +202,10 @@ public class BitbucketCloudClient implements Closeable {
                 logger.info(request.getMethod() + " " + request.getRequestUri());
                 ByteArrayOutputStream payload = new ByteArrayOutputStream();
                 request.getEntity().writeTo(payload);
-                logger.info(payload.toString());
+                logger.info(payload::toString);
                 return null;
             } else {
-                HttpClientResponseHandler<? extends T> responseHandler = (response) -> {
+                HttpClientResponseHandler<? extends T> responseHandler = response -> {
                     if (response.getCode() == HttpStatus.SC_NO_CONTENT) {
                         return null;
                     } else if (response.getCode() >= HttpStatus.SC_OK //
@@ -573,7 +573,7 @@ public class BitbucketCloudClient implements Closeable {
         if (hookName != null && hookName.length > 0) {
             return webhooks.stream() //
                     .filter(hook -> Arrays.asList(hookName).contains(hook.getDescription())) //
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return webhooks;
     }
@@ -700,7 +700,7 @@ public class BitbucketCloudClient implements Closeable {
         return activities.stream() //
                 .map(Activity::getApproval) //
                 .filter(Objects::nonNull) //
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -805,7 +805,7 @@ public class BitbucketCloudClient implements Closeable {
         }
     }
 
-    protected void setupRequest(HttpUriRequest request) throws ClientException {
+    protected void setupRequest(HttpUriRequest request) {
         addHeader(request, HttpHeaders.ACCEPT, "application/json;charset=utf-8");
         addHeader(request, HEADER_CSRF, "no-check");
         addHeader(request, HttpHeaders.CONTENT_TYPE, "application/json;charset=utf-8");
@@ -853,7 +853,7 @@ public class BitbucketCloudClient implements Closeable {
     private ObjectMapper buildJSONConverter() {
         ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        jsonMapper.setSerializationInclusion(Include.NON_NULL);
+        jsonMapper.setDefaultPropertyInclusion(Include.NON_NULL);
         return jsonMapper;
     }
 

@@ -10,11 +10,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class CodeInsightsReport implements Serializable {
 
     public enum ReportType {
-        SECURITY, COVERAGE;
+        SECURITY, COVERAGE, TEST, BUG;
     }
 
     public enum ReportResult {
-        FAILED, PASSED;
+        PASSED, FAILED, PENDING;
     }
 
     private static final long serialVersionUID = 8033145626502387440L;

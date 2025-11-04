@@ -3,21 +3,23 @@
     <parent>
         <groupId>com.github.nfalco79</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
     </parent>
     <artifactId>bitbucket-rest-client</artifactId>
     <version>2.2.3-SNAPSHOT</version>
     <name>Bitbucket Client</name>
     <description>A Bitbucket Cloud REST APIs client</description>
-    <url>https://github.com/nfalco79/bitbucket-rest-client</url>
+    <url>https://github.com/nfalco79/${project.artifactId}</url>
+
     <scm>
-        <url>https://github.com/nfalco79/bitbucket-rest-client</url>
+        <url>${project.url}</url>
         <connection>scm:git:git@github.com:nfalco79/bitbucket-rest-client.git</connection>
         <developerConnection>scm:git:git@github.com:nfalco79/bitbucket-rest-client.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
+
     <properties>
-        <java.level>8</java.level>
+        <java.level>17</java.level>
 
         <httpclient.version>5.5.1</httpclient.version>
         <uritemplate.version>2.1.8</uritemplate.version>
@@ -26,7 +28,7 @@
 
     <issueManagement>
         <system>github</system>
-        <url>https://github.com/nfalco79/bitbucket-rest-client/issues</url>
+        <url>${project.url}>/issues</url>
     </issueManagement>
 
     <dependencies>
