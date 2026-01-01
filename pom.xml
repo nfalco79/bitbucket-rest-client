@@ -21,7 +21,7 @@
     <properties>
         <java.level>17</java.level>
 
-        <httpclient.version>5.5.1</httpclient.version>
+        <httpclient.version>5.6</httpclient.version>
         <uritemplate.version>2.1.8</uritemplate.version>
         <jackson-databind.version>2.20.1</jackson-databind.version>
     </properties>
